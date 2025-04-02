@@ -32,10 +32,23 @@ user_list, hostname_list = ssh_multiple_connections(hosts_info, command)
 content = "SSH服务器登录信息：\n"
 for user, hostname in zip(user_list, hostname_list):
     content += f"用户名：{user}，服务器：{hostname}\n"
-beijing_timezone = timezone(timedelta(hours=8))
-time = datetime.now(beijing_timezone).strftime('%Y-%m-%d %H:%M:%S')
-loginip = requests.get('https://api.ipify.org?format=json').json()['ip']
-content += f"登录时间：{time}\n登录IP：{loginip}"
+# 获取当前时间
+current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+
+# 发送请求
+response = requests.get('http://vv.video.qq.com/checktime?otype=json')
+
+# 去掉前缀 "QZOutputJson="
+json_content = response.text[len("QZOutputJson="):]
+
+# 解析JSON
+data = json.loads(json_content)
+
+# 提取IP地址
+loginip = data['ip']
+
+# 构建内容字符串
+content = f"登录时间：{current_time}\n登录IP：{loginip}"
 
 push = os.getenv('PUSH')
 
@@ -85,3 +98,4 @@ elif push == "telegram":
     telegram_push(content)
 else:
     print("推送失败，推送参数设置错误")
+
