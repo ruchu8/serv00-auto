@@ -2,6 +2,7 @@ import os
 import paramiko
 import requests
 import json
+import time  # 导入time模块
 from datetime import datetime, timezone, timedelta
 
 def ssh_multiple_connections(hosts_info, command):
