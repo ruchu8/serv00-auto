@@ -34,7 +34,9 @@ for user, hostname in zip(user_list, hostname_list):
     content += f"用户名：{user}，服务器：{hostname}\n"
 beijing_timezone = timezone(timedelta(hours=8))
 time = datetime.now(beijing_timezone).strftime('%Y-%m-%d %H:%M:%S')
-loginip = requests.get('https://myip.ipip.net/json').json()['ip']
+response = requests.get('https://myip.ipip.net/json')
+data = response.json()
+loginip = data['data']['ip']
 content += f"登录时间：{time}\n登录IP：{loginip}"
 
 push = os.getenv('PUSH')
